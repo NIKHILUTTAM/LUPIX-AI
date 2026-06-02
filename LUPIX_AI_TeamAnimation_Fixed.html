@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUPIX AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1a2e5a;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --blue-mid: #3b82f6;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+    --white: #ffffff;
+    --card-shadow: 0 2px 16px rgba(37,99,235,0.07);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+  h1,h2,h3,h4 { font-family: 'Sora', sans-serif; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--navy);
+    color: #94a3b8;
+    font-size: 13px;
+    padding: 7px 0;
+  }
+  .topbar-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+  }
+  .topbar span { display: flex; align-items: center; gap: 6px; }
+  .topbar a { color: #94a3b8; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    background: #000;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 1px 12px rgba(0,0,0,0.18);
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .logo img {
+    width: 52px; height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  .logo-text { font-family: 'Sora', sans-serif; font-weight: 600; color: white; font-size: 17px; }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a { text-decoration: none; color: #cbd5e1; font-size: 14px; font-weight: 500; transition: color .2s; }
+  .nav-links a:hover, .nav-links a.active { color: white; }
+  .nav-cta {
+    background: var(--blue); color: white; padding: 9px 20px;
+    border-radius: 8px; font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: background .2s;
+    writing-mode: initial;
+  }
+  .nav-cta:hover { background: var(--navy); }
+
+  /* HERO */
+  .hero {
+    background:
+      radial-gradient(circle at 25% 15%, rgba(37,99,235,0.22), transparent 20%),
+      radial-gradient(circle at 82% 12%, rgba(96,165,250,0.16), transparent 22%),
+      linear-gradient(180deg, rgba(5,16,44,0.92), rgba(9,22,56,0.92)),
+      url('logo-lupixai.png');
+    background-size:
+      auto,
+      auto,
+      cover,
+      190px 190px;
+    background-position:
+      25% 15%,
+      82% 12%,
+      center center,
+      center center;
+    background-repeat:
+      no-repeat,
+      no-repeat,
+      no-repeat,
+      repeat;
+    min-height: 88vh; display: flex; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.12), transparent 20%),
+                radial-gradient(circle at 70% 80%, rgba(96,165,250,0.14), transparent 25%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 45%),
+                linear-gradient(225deg, rgba(59,130,246,0.06), transparent 40%);
+    pointer-events: none;
+    opacity: 0.85;
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; padding: 80px 24px;
+    display: flex; flex-direction: column; align-items: flex-start; max-width: 720px;
+    position: relative; z-index: 1;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.35);
+    color: #93c5fd; font-size: 12px; font-weight: 600; letter-spacing: .08em;
+    padding: 6px 14px; border-radius: 50px; text-transform: uppercase; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 54px; font-weight: 700; color: white; line-height: 1.13;
+    margin-bottom: 24px;
+  }
+  .hero h1 span { color: #60a5fa; }
+  .hero p { color: #93c5fd; font-size: 17px; line-height: 1.7; margin-bottom: 36px; }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--blue); color: white; padding: 14px 28px;
+    border-radius: 10px; font-weight: 600; font-size: 15px;
+    text-decoration: none; transition: all .2s; border: none; cursor: pointer;
+  }
+  .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent; color: white; padding: 14px 28px;
+    border-radius: 10px; font-weight: 600; font-size: 15px;
+    text-decoration: none; border: 1.5px solid rgba(255,255,255,0.35);
+    transition: all .2s;
+  }
+  .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num { font-family: 'Sora', sans-serif; font-size: 28px; font-weight: 700; color: white; }
+  .hero-stat .lbl { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .hero-visual {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px; padding: 24px 20px; backdrop-filter: blur(10px);
+    transition: transform .3s;
+  }
+  .hero-card:hover { transform: translateY(-4px); }
+  .hero-card:first-child { grid-column: 1 / -1; }
+  .hero-card .icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: rgba(59,130,246,0.25); display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 12px;
+  }
+  .hero-card h4 { color: white; font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .hero-card p { color: #93c5fd; font-size: 13px; line-height: 1.5; }
+
+  /* SECTION COMMON */
+  section { padding: 88px 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .section-label {
+    font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 10px;
+  }
+  .section-title { font-size: 38px; font-weight: 700; color: var(--navy); margin-bottom: 14px; }
+  .section-subtitle { font-size: 16px; color: var(--muted); max-width: 520px; line-height: 1.7; }
+  .section-header { margin-bottom: 56px; }
+  .section-header.center { text-align: center; }
+  .section-header.center .section-subtitle { margin: 0 auto; }
+
+  /* SERVICES */
+  .services { background: var(--bg); }
+  .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .service-card {
+    background: white; border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px 22px; transition: all .3s; cursor: default;
+  }
+  .service-card:hover { border-color: var(--blue); box-shadow: var(--card-shadow); transform: translateY(-4px); }
+  .service-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: var(--blue-light); display: flex; align-items: center;
+    justify-content: center; font-size: 26px; margin-bottom: 16px;
+  }
+  .service-card h3 { font-size: 16px; font-weight: 600; color: var(--navy); margin-bottom: 10px; }
+  .service-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+  /* ABOUT */
+  .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .about-img {
+    border-radius: 20px; overflow: hidden; position: relative;
+    background: var(--blue-light); height: 420px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .about-img-inner {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px;
+  }
+  .about-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .check-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 600; color: var(--navy);
+    background: var(--blue-light); border-radius: 10px; padding: 12px 16px;
+    border: 1px solid #bfdbfe; transition: all .2s;
+  }
+  .check-item:hover { background: #2563eb; color: white; transform: translateX(4px); }
+  .check-item::before {
+    content: '✓'; width: 24px; height: 24px; border-radius: 50%;
+    background: #2563eb; color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .check-item:hover::before { background: white; color: #2563eb; }
+  .about-cta { margin-top: 20px; }
+
+  /* CATEGORIES */
+  .categories { background: var(--bg); }
+  .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .cat-card {
+    background: white; border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--border); transition: all .3s;
+  }
+  .cat-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow); }
+  .cat-img {
+    height: 160px; display: flex; align-items: center; justify-content: center;
+    font-size: 56px;
+  }
+  .cat-img.iot { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+  .cat-img.prog { background: linear-gradient(135deg, #f0fdf4, #bbf7d0); }
+  .cat-img.design { background: linear-gradient(135deg, #fdf4ff, #f3e8ff); }
+  .cat-img.soft { background: linear-gradient(135deg, #fff7ed, #fed7aa); }
+  .cat-info { padding: 16px 18px; }
+  .cat-info h3 { font-size: 15px; font-weight: 600; color: var(--navy); }
+  .cat-info span { font-size: 13px; color: var(--muted); }
+
+  /* COURSES */
+  .courses-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .course-card {
+    background: white; border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; transition: all .3s;
+  }
+  .course-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow); }
+  .course-img {
+    height: 180px; display: flex; align-items: center; justify-content: center; font-size: 64px;
+  }
+  .course-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    image-rendering: auto;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  .course-img.web { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+  .course-img.python { background: linear-gradient(135deg, #f0fdf4, #86efac); }
+  .course-img.iot2 { background: linear-gradient(135deg, #fff7ed, #fdba74); }
+  .course-body { padding: 20px; }
+  .course-price { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
+  .stars { color: #f59e0b; font-size: 14px; }
+  .reviews { font-size: 13px; color: var(--muted); margin-left: 6px; }
+  .course-title { font-size: 16px; font-weight: 600; color: var(--navy); margin: 10px 0 6px; }
+  .course-btns { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-sm {
+    padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    text-decoration: none; border: 1.5px solid var(--blue); cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-sm.solid { background: var(--blue); color: white; }
+  .btn-sm.solid:hover { background: #1d4ed8; }
+  .btn-sm.ghost { background: transparent; color: var(--blue); }
+  .btn-sm.ghost:hover { background: var(--blue-light); }
+
+  /* TEAM */
+  .team { background: var(--bg); }
+  .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .team-card {
+    background: white; border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; transition: all .3s; text-align: center;
+  }
+  .team-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow); }
+  .team-photo {
+    height: 200px; background: #f1f5f9;
+    display: flex; align-items: center; justify-content: center; font-size: 72px;
+  }
+  .team-info { padding: 16px; }
+  .team-info h3 { font-size: 15px; font-weight: 600; color: var(--blue); }
+  .team-info p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* FOUNDERS SECTION */
+  .founders { background: white; }
+  .founders-page-header { text-align: center; padding-bottom: 48px; }
+  .founders-page-header h2 { font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+  .founders-page-header p { font-size: 16px; color: var(--muted); }
+  .founders-box {
+    background: #c5d5f0; border-radius: 24px; padding: 48px 40px;
+  }
+  .founders-box-header { text-align: center; margin-bottom: 40px; }
+  .founders-box-header h3 { font-size: 30px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .founders-box-header p { font-size: 15px; color: var(--navy); opacity: .75; }
+  .founders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .founder-card {
+    position: relative;
+    background-image: url('b1.png');
+    background-color: rgba(255,255,255,0.88);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: screen;
+    border: 1px solid rgba(226,232,240,0.9);
+    border-radius: 18px;
+    padding: 36px 28px;
+    text-align: center;
+    transition: transform .3s;
+    overflow: hidden;
+  }
+  .founder-card > * { position: relative; z-index: 1; }
+  .founder-card:hover { transform: translateY(-4px); }
+  .founder-avatar {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: #e2e8f0; margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; overflow: hidden; border: 3px solid var(--blue-light);
+  }
+  .founder-name { font-size: 20px; font-weight: 700; color: var(--blue); margin-bottom: 4px; }
+  .founder-role { font-size: 14px; color: var(--navy); font-weight: 500; margin-bottom: 16px; }
+  .founder-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+  .founder-socials { display: flex; gap: 16px; justify-content: center; }
+  .founder-social {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 2px solid var(--navy); display: flex; align-items: center;
+    justify-content: center; text-decoration: none; font-size: 18px;
+    color: var(--navy); transition: all .2s;
+  }
+  .founder-social:hover { background: var(--navy); color: white; }
+
+  /* STATS */
+  .stats {
+    background: linear-gradient(135deg, #0f1f4a 0%, #1e40af 100%);
+    padding: 72px 0;
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .stat-item {
+    text-align: center; padding: 24px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Sora', sans-serif; font-size: 42px; font-weight: 700; color: white; }
+  .stat-num sup { font-size: 22px; }
+  .stat-lbl { font-size: 14px; color: #93c5fd; margin-top: 6px; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--bg); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .testi-card {
+    background: white; border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px 24px; transition: all .3s;
+  }
+  .testi-card:hover { box-shadow: var(--card-shadow); }
+  .testi-quote { font-size: 32px; color: var(--blue); font-family: Georgia; line-height: 1; margin-bottom: 14px; }
+  .testi-text { font-size: 14px; color: var(--muted); line-height: 1.75; margin-bottom: 20px; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--blue-light); display: flex; align-items: center;
+    justify-content: center; font-weight: 700; color: var(--blue); font-size: 14px;
+  }
+  .testi-name { font-weight: 600; font-size: 14px; color: var(--navy); }
+  .testi-role { font-size: 12px; color: var(--muted); }
+  .testi-stars { color: #f59e0b; font-size: 13px; margin-top: 4px; }
+
+  /* CONTACT */
+  .contact-inner { display: grid; grid-template-columns: 1fr 1.2fr; gap: 64px; align-items: start; }
+  .contact-info h2 { font-size: 32px; font-weight: 700; color: var(--navy); margin-bottom: 14px; }
+  .contact-info p { color: var(--muted); line-height: 1.7; margin-bottom: 32px; }
+  .contact-item { display: flex; gap: 14px; margin-bottom: 20px; align-items: flex-start; }
+  .contact-icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: var(--blue-light); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .contact-item h4 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+  .contact-item p { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.5; }
+  .contact-form {
+    background: white; border: 1px solid var(--border); border-radius: 20px; padding: 36px;
+  }
+  .contact-form h3 { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 11px 14px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 14px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; outline: none; transition: border .2s;
+    background: white;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--blue); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-submit {
+    width: 100%; padding: 13px; background: var(--blue); color: white;
+    border: none; border-radius: 8px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background .2s; font-family: 'DM Sans', sans-serif;
+  }
+  .form-submit:hover { background: #1d4ed8; }
+
+  /* FOOTER */
+  footer { background: var(--navy); color: #94a3b8; padding: 64px 0 0; }
+  .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 48px; }
+  .footer-brand .logo-text { color: white; font-size: 20px; margin-bottom: 12px; display: block; }
+  .footer-brand p { font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+  .footer-socials { display: flex; gap: 10px; }
+  .social-btn {
+    width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: #94a3b8; font-size: 16px; text-decoration: none; transition: all .2s;
+  }
+  .social-btn:hover { background: var(--blue); color: white; }
+  .footer-col h4 { color: white; font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a { color: #94a3b8; text-decoration: none; font-size: 14px; transition: color .2s; }
+  .footer-col ul li a:hover { color: #60a5fa; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 18px 0; text-align: center; font-size: 13px;
+  }
+  .footer-bottom a { color: #60a5fa; text-decoration: none; }
+
+  /* FLOATING BTNS */
+  .floating-btns {
+    position: fixed; left: 16px; top: 50%; transform: translateY(-50%);
+    z-index: 99; display: flex; flex-direction: column; gap: 10px;
+  }
+  .float-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: white; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; text-decoration: none; box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    transition: all .2s;
+  }
+  .float-btn:hover { background: var(--blue); border-color: var(--blue); filter: brightness(0) invert(1); }
+
+  /* =========================================
+     FIXED: Apply Sidebar
+     ========================================= */
+  .apply-sidebar {
+    position: fixed; 
+    right: 0; 
+    top: 50%; 
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    z-index: 9999; 
+    background: var(--blue); 
+    color: white;
+    padding: 24px 12px; 
+    font-size: 16px; 
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px; 
+    text-transform: uppercase; 
+    border-radius: 0 8px 8px 0;
+    cursor: pointer; 
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.15);
+  }
+  .apply-sidebar:hover { background-color: var(--navy); }
+
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .services-grid, .cat-grid, .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .courses-grid { grid-template-columns: 1fr 1fr; }
+    .about-inner { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .contact-inner { grid-template-columns: 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .section-title { font-size: 28px; }
+    .hero h1 { font-size: 36px; }
+    .services-grid, .cat-grid, .team-grid, .courses-grid { grid-template-columns: 1fr; }
+  }
+
+/* Team Image Animation */
+.team-member img,.team-img{
+cursor:pointer;
+transition:all .4s ease;
+}
+.team-member img:hover,.team-img:hover{
+transform:scale(1.08);
+box-shadow:0 15px 35px rgba(0,0,0,.3);
+}
+.image-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:99999;justify-content:center;align-items:center}
+.image-modal.active{display:flex}
+.image-modal img{max-width:85%;max-height:85vh;border-radius:15px;animation:zoomIn .4s ease}
+.close-modal{position:absolute;top:20px;right:30px;color:#fff;font-size:45px;cursor:pointer}
+@keyframes zoomIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+
+.team-member img,.team-card img,.team-img{
+cursor:pointer!important;
+transition:transform .4s ease, box-shadow .4s ease!important;
+}
+.team-member img:hover,.team-card img:hover,.team-img:hover{
+transform:scale(1.08)!important;
+box-shadow:0 15px 40px rgba(0,0,0,.35)!important;
+}
+#teamImageModal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.92);
+z-index:999999;
+justify-content:center;
+align-items:center;
+}
+#teamImageModal.active{display:flex;}
+#teamImageModal img{
+max-width:90%;
+max-height:90vh;
+border-radius:16px;
+animation:zoomIn .35s ease;
+}
+#teamImageModal .close-btn{
+position:absolute;
+top:20px;
+right:30px;
+font-size:48px;
+color:#fff;
+cursor:pointer;
+}
+@keyframes zoomIn{
+from{opacity:0;transform:scale(.6);}
+to{opacity:1;transform:scale(1);}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>✉️ <a href="mailto:info.lupixai@gmail.com">info.lupixai@gmail.com</a></span>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <img src="logo-lupixai.png" alt="LUPIX AI logo">
+      <span class="logo-text">LUPIX AI</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#courses">Courses</a></li>
+      <li><a href="#team">Our Team</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Apply for Training</a>
+  </div>
+</nav>
+
+<div class="floating-btns">
+  <a class="float-btn" href="https://wa.me/918400075050" title="WhatsApp">💬</a>
+  <a class="float-btn" href="mailto:info.lupixai@gmail.com" title="Email">✉️</a>
+  <a class="float-btn" href="tel:+918400075050" title="Call">📞</a>
+</div>
+
+<a class="apply-sidebar" href="#contact">Apply for Training</a>
+
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">⚡ Career Development</div>
+      <h1>Shape Your<br>Future in <span>Tech</span></h1>
+      <p>Transform your career with our intensive bootcamps and mentorship programs. From beginner to professional, we'll guide you every step of the way.</p>
+      <div class="hero-btns">
+        <a href="#courses" class="btn-primary">Explore Programs</a>
+        <a href="#team" class="btn-outline">Find Mentors</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="container">
+    <div class="section-header center">
+      <div class="section-label">Our Services</div>
+      <h2 class="section-title">What We Offer</h2>
+      <p class="section-subtitle">Comprehensive hands-on training to build job-ready skills in today's most in-demand technologies.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🌐</div>
+        <h3>Web / App Training</h3>
+        <p>Learn to create responsive websites and mobile applications with modern frameworks and technologies.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">&lt;/&gt;</div>
+        <h3>Coding Projects</h3>
+        <p>Hands-on training in Python, Java, C++ with real-world project development and industry best practices.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:none;padding:0;overflow:hidden;"><img src="aiml-training1.png" alt="AI ML Training" style="width:52px;height:52px;object-fit:contain;"></div>
+        <h3>AI / ML Training</h3>
+        <p>Master Artificial Intelligence and Machine Learning with hands-on projects in deep learning, NLP, and real-world model deployment.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🔒</div>
+        <h3>Cyber Security</h3>
+        <p>Learn ethical hacking, network security, penetration testing, and how to defend systems against modern cyber threats.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-img" style="padding:0;overflow:hidden;">
+        <img src="about.png" alt="About LUPIX AI" style="width:100%;height:100%;object-fit:cover;object-position:center;border-radius:20px;">
+      </div>
+      <div>
+        <div class="section-label">About Us</div>
+        <h2 class="section-title">Welcome to LUPIX AI</h2>
+        <p style="color:var(--muted);line-height:1.75;margin-bottom:14px">We provide hands-on training in Generative AI, Machine Learning, Cyber Security, and more. Our programs focus on real-world skills with practical, project-based learning.</p>
+        <p style="color:var(--muted);line-height:1.75">Whether you're a student or professional, our goal is to help you master AI and security technologies, build strong portfolios, and become job-ready in today's most in-demand fields.</p>
+        <div class="about-checks">
+          <div class="check-item">Skilled Instructors</div>
+          <div class="check-item">Interactive Classes</div>
+          <div class="check-item">Certificate Programs</div>
+          <div class="check-item">Hands-on Projects</div>
+          <div class="check-item">Real-World Curriculum</div>
+          <div class="check-item">Career-Oriented Training</div>
+        </div>
+        <div class="about-cta">
+          <a href="#contact" class="btn-primary">Learn More</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="courses">
+  <div class="container">
+    <div class="section-header center">
+      <div class="section-label" style="font-size:13px;letter-spacing:.15em;">⚡ OUR PROGRAMS</div>
+      <h2 class="section-title" style="font-size:42px;background:linear-gradient(135deg,#1a2e5a,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        <span id="courses-type"></span><span id="courses-cursor" style="display:inline-block;width:3px;height:36px;background:#2563eb;margin-left:3px;vertical-align:middle;animation:blink .7s infinite;"></span>
+      </h2>
+      <p class="section-subtitle" style="font-size:17px;color:#475569;max-width:600px;margin:0 auto;line-height:1.8;">
+        Hands-on, industry-aligned training built for the <strong style="color:#2563eb;">AI era</strong> — real projects, real skills, real impact. 🚀
+      </p>
+      <script>
+        (function(){
+          const words = ['Popular Courses','AI-Powered Learning','Future-Ready Skills','Join & Grow Today'];
+          let wi=0,ci=0,del=false;
+          const el=document.getElementById('courses-type');
+          function run(){
+            const w=words[wi];
+            if(!del){el.textContent=w.slice(0,++ci);if(ci===w.length){del=true;setTimeout(run,1800);return;}}
+            else{el.textContent=w.slice(0,--ci);if(ci===0){del=false;wi=(wi+1)%words.length;}}
+            setTimeout(run,del?55:100);
+          }
+          setTimeout(run,600);
+        })();
+      </script>
+    </div>
+    <div class="courses-grid">
+      <div class="course-card">
+        <div class="course-img web" style="background:none;padding:0;overflow:hidden;"><img src="genai.png" srcset="genai.png 1x, genai.png 2x" loading="lazy" decoding="async" alt="Generative AI" style="width:100%;height:100%;object-fit:cover;object-position:center;"></div>
+        <div class="course-body">
+          <div><span class="stars">★★★★★</span><span class="reviews">(946 reviews)</span></div>
+          <div class="course-title">Generative AI</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6">Master the art of building AI-powered applications using LLMs, prompt engineering, LangChain, and tools like ChatGPT API — create chatbots, image generators, and intelligent automation systems.</p>
+          <div class="course-btns">
+            <a href="#contact" class="btn-sm ghost">Read More</a>
+            <a href="#contact" class="btn-sm solid">Join Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-img python" style="background:none;padding:0;overflow:hidden;"><img src="aiml-mastery.png" srcset="aiml-mastery.png 1x, aiml-mastery.png 2x" loading="lazy" decoding="async" alt="AI ML Mastery" style="width:100%;height:100%;object-fit:cover;object-position:center;"></div>
+        <div class="course-body">
+          <div><span class="stars">★★★★★</span><span class="reviews">(756 reviews)</span></div>
+          <div class="course-title">AI / ML Mastery</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6">From Python fundamentals to advanced Machine Learning — cover supervised & unsupervised learning, deep neural networks, NLP, computer vision, and deploy real-world ML models with hands-on projects.</p>
+          <div class="course-btns">
+            <a href="#contact" class="btn-sm ghost">Read More</a>
+            <a href="#contact" class="btn-sm solid">Join Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-img iot2">🔒</div>
+        <div class="course-body">
+          <div><span class="stars">★★★★★</span><span class="reviews">(656 reviews)</span></div>
+          <div class="course-title">Cyber Security</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6">Dive into ethical hacking, penetration testing, network defense, cryptography, and vulnerability assessment — gain industry-recognized skills to protect systems and launch a career in cybersecurity.</p>
+          <div class="course-btns">
+            <a href="#contact" class="btn-sm ghost">Read More</a>
+            <a href="#contact" class="btn-sm solid">Join Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="team" id="team">
+  <div class="container">
+    <div class="section-header center">
+      <div class="section-label">Our Team</div>
+      <h2 class="section-title">Expert Instructors</h2>
+      <p class="section-subtitle">Learn from experienced engineers who bring real-world expertise to every session.</p>
+    </div>
+    <div class="team-grid" style="grid-template-columns:1fr;">
+      <div class="team-card">
+        <div class="team-photo" style="height:200px;background:#f1f5f9;padding:0;overflow:hidden;display:block;">
+          <img src="image_e33899.png" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:0;">
+        </div>
+        <div class="team-info">
+          <h3>Mr. Atul Anand</h3>
+          <p>Cyber Security Specialist</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="founders">
+  <div class="container">
+    <div class="founders-page-header">
+      <h2>The Team Powering Innovation at LUPIX AI</h2>
+      <p>Powered by vision. Driven by passion. Built to inspire</p>
+    </div>
+    <div class="founders-box">
+      <div class="founders-box-header">
+        <h3>Founding Vision & Strategic Direction</h3>
+        <p>Visionaries guiding LUPIX AI towards innovation and impact.</p>
+      </div>
+      <div class="founders-grid">
+        <div class="founder-card">
+          <div class="founder-avatar" style="background:none;border:3px solid #dbeafe;overflow:hidden;">
+            <img src="Nikhil.jpeg" alt="Nikhil Uttam" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:50%;">
+          </div>
+          <div class="founder-name">Er. Nikhil Uttam</div>
+          <div class="founder-role">CEO & Founder</div>
+          <p class="founder-desc">Founded LUPIX AI with a clear vision, blending technical skills and innovation to empower students and create real-world impact.</p>
+          <div class="founder-socials">
+            <a href="https://wa.me/917985175413" class="founder-social" title="WhatsApp">💬</a>
+            <a href="#" class="founder-social" title="Instagram">📸</a>
+            <a href="mailto:info.lupixai@gmail.com" class="founder-social" title="Email">✉️</a>
+          </div>
+        </div>
+        <div class="founder-card">
+          <div class="founder-avatar" style="background:none;border:3px solid #dbeafe;">
+            <img src="tarun.jpeg" alt="Tarun Srivastava" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+          </div>
+          <div class="founder-name">Er. Tarun Srivastava</div>
+          <div class="founder-role">CTO & Director</div>
+          <p class="founder-desc">Drives the strategic direction of LUPIX AI, blending leadership with a deep commitment to innovation in education and technology.</p>
+          <div class="founder-socials">
+            <a href="https://wa.me/917985175413" class="founder-social" title="WhatsApp">💬</a>
+            <a href="#" class="founder-social" title="Instagram">📸</a>
+            <a href="mailto:info.lupixai@gmail.com" class="founder-social" title="Email">✉️</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="container">
+    <div class="section-header center">
+      <div class="section-label">Testimonials</div>
+      <h2 class="section-title">What Our Students Say</h2>
+      <p class="section-subtitle">Discover how our comprehensive training programs have transformed careers and shaped the future of our students.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <p class="testi-text">I recently completed a 45-day intensive AI/ML training at LUPIX AI. It was an enriching experience that significantly advanced my knowledge in machine learning algorithms and practical model deployment skills.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">S</div>
+          <div>
+            <div class="testi-name">Shashank</div>
+            <div class="testi-role">Industrial Automation</div>
+            <div class="testi-stars">★★★★★ 5.0</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <p class="testi-text">I recently completed ML training and it was one of the best training programs I've attended. The curriculum was comprehensive and the practical approach made all the difference in my learning journey.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">NP</div>
+          <div>
+            <div class="testi-name">Nishu Prajapati</div>
+            <div class="testi-role">Data Science</div>
+            <div class="testi-stars">★★★★★ 5.0</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <p class="testi-text">The Python development course exceeded my expectations. The instructors were highly skilled, the hands-on projects helped me build a strong portfolio, and I landed my dream job within months.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">RK</div>
+          <div>
+            <div class="testi-name">Rahul Kumar</div>
+            <div class="testi-role">Python Development</div>
+            <div class="testi-stars">★★★★★ 5.0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="contact-info">
+        <div class="section-label">Contact Us</div>
+        <h2>Let's Connect</h2>
+        <p>Have questions about our programs? Reach out and our team will get back to you promptly. We're here to guide you on your tech journey.</p>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <h4>Address</h4>
+            <p>Rama Devi Chauraha, Shiv Katra, Krishna Nagar, Kanpur, Uttar Pradesh – 208007, India</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <h4>Phone</h4>
+            <p>+91 79851 75413</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <h4>Email</h4>
+            <p>info.lupixai@gmail.com</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <h4>Hours</h4>
+            <p>Mon - Sat: 9AM - 6PM</p>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3>Send Us a Message</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="your@email.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="tel" placeholder="+91 XXXXX XXXXX">
+        </div>
+        <div class="form-group">
+          <label>Course Interest</label>
+          <select>
+            <option>Select a course</option>
+            <option>Generative AI</option>
+            <option>AI / ML Mastery</option>
+            <option>Cyber Security</option>
+            <option>Web / App Development</option>
+            <option>Python Programming</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Query</label>
+          <textarea placeholder="Tell us about your goals or any questions..."></textarea>
+        </div>
+        <button class="form-submit" onclick="alert('Thank you! We will contact you shortly.')">Submit Enquiry</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-text">LUPIX AI</span>
+        <p>LUPIX AI empowers the next generation of tech professionals through cutting-edge training in Artificial Intelligence, Machine Learning, Generative AI, and Cyber Security — bridging the gap between academic learning and real-world industry demands.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn">f</a>
+          <a href="https://wa.me/918400075050" class="social-btn">W</a>
+          <a href="#" class="social-btn">in</a>
+          <a href="#" class="social-btn">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#courses">Training</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Our Services</h4>
+        <ul>
+          <li><a href="#">Generative AI</a></li>
+          <li><a href="#">AI / ML Training</a></li>
+          <li><a href="#">Cyber Security</a></li>
+          <li><a href="#">Web Development</a></li>
+          <li><a href="#">App Development</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Info</h4>
+        <ul>
+          <li><a href="tel:+918400075050">+91 79851 75413</a></li>
+          <li><a href="tel:+919554715751"></a></li>
+          <li><a href="mailto:info.lupixai@gmail.com">info.lupixai<br>@gmail.com</a></li>
+          <li><a href="#">Monday – Saturday: 9:00 AM – 6:00 PM<br>Sunday: Closed</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LUPIX AI. All rights reserved. Designed with ❤️ by LUPIX AI Team</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+/* ── ACTIVE NAV ON SCROLL ── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 130) cur = s.id; });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+  // Shrink nav on scroll
+  document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ── SCROLL REVEAL ── */
+const revealEls = document.querySelectorAll('.service-card, .course-card, .team-card, .founder-card, .testi-card, .stat-item, .contact-item, .hero-badge, .section-title, .section-subtitle');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('revealed'); revealObs.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(32px)';
+  el.style.transition = `opacity 0.55s ease ${i % 4 * 0.1}s, transform 0.55s ease ${i % 4 * 0.1}s`;
+  revealObs.observe(el);
+});
+// Inject revealed style
+const revStyle = document.createElement('style');
+revStyle.textContent = '.revealed { opacity: 1 !important; transform: translateY(0) !important; } nav.scrolled { box-shadow: 0 4px 24px rgba(37,99,235,0.13) !important; }';
+document.head.appendChild(revStyle);
+
+/* ── COUNTER ANIMATION ── */
+function animateCount(el, target, suffix='') {
+  let start = 0;
+  const dur = 2000, step = 16;
+  const inc = target / (dur / step);
+  const timer = setInterval(() => {
+    start += inc;
+    if (start >= target) { start = target; clearInterval(timer); }
+    el.textContent = Math.floor(start).toLocaleString() + suffix;
+  }, step);
+}
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.stat-num').forEach(el => {
+        const txt = el.textContent;
+        const num = parseInt(txt.replace(/[^0-9]/g,''));
+        const sup = el.querySelector('sup');
+        el.textContent = '0';
+        if (sup) el.appendChild(sup);
+        animateCount(el, num, '+');
+        if (sup) { el.textContent = '0+'; }
+      });
+      statsObs.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+const statsSection = document.querySelector('.stats');
+if (statsSection) statsObs.observe(statsSection);
+
+/* ── MOBILE HAMBURGER MENU ── */
+const navInner = document.querySelector('.nav-inner');
+const navLinksList = document.querySelector('.nav-links');
+const burger = document.createElement('button');
+burger.innerHTML = '☰';
+burger.style.cssText = 'display:none;background:none;border:none;font-size:24px;cursor:pointer;color:var(--navy);padding:4px 8px;';
+burger.id = 'burger';
+navInner.insertBefore(burger, navLinksList);
+const burgerStyle = document.createElement('style');
+burgerStyle.textContent = `
+  @media(max-width:900px){
+    #burger{display:block!important;}
+    .nav-links{display:none;position:absolute;top:64px;left:0;right:0;background:white;flex-direction:column;padding:16px 24px;gap:16px!important;border-bottom:1px solid #e2e8f0;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.08);}
+    .nav-links.open{display:flex!important;}
+    .nav-cta{display:none;}
+  }`;
+document.head.appendChild(burgerStyle);
+burger.addEventListener('click', () => navLinksList.classList.toggle('open'));
+navLinksList.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinksList.classList.remove('open')));
+
+/* ── CARD TILT ON HOVER ── */
+document.querySelectorAll('.service-card, .founder-card, .course-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `translateY(-6px) rotateX(${-y*6}deg) rotateY(${x*6}deg)`;
+  });
+  card.addEventListener('mouseleave', () => card.style.transform = '');
+});
+
+/* ── FORM SUCCESS TOAST ── */
+const submitBtn = document.querySelector('.form-submit');
+if (submitBtn) {
+  submitBtn.addEventListener('click', () => {
+    const toast = document.createElement('div');
+    toast.textContent = '✅ Message sent! We\'ll contact you soon.';
+    toast.style.cssText = 'position:fixed;bottom:32px;right:32px;background:#2563eb;color:white;padding:14px 24px;border-radius:10px;font-weight:600;font-size:14px;z-index:9999;box-shadow:0 4px 20px rgba(37,99,235,0.3);animation:slideUp 0.4s ease;';
+    document.body.appendChild(toast);
+    const toastAnim = document.createElement('style');
+    toastAnim.textContent = '@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}';
+    document.head.appendChild(toastAnim);
+    setTimeout(() => toast.remove(), 3500);
+  });
+}
+
+/* ── BACK TO TOP BUTTON ── */
+const topBtn = document.createElement('button');
+topBtn.innerHTML = '↑';
+topBtn.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--blue);color:white;border:none;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;z-index:200;box-shadow:0 4px 16px rgba(37,99,235,0.3);transition:all 0.3s ease;opacity:0;';
+document.body.appendChild(topBtn);
+window.addEventListener('scroll', () => {
+  const show = window.scrollY > 500;
+  topBtn.style.opacity = show ? '1' : '0';
+  topBtn.style.transform = `translateX(-50%) translateY(${show ? '0' : '80px'})`;
+});
+topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>
+
+<div class="image-modal" id="imageModal">
+  <span class="close-modal">&times;</span>
+  <img id="modalImage" src="" alt="">
+</div>
+<script>
+const modal=document.getElementById('imageModal');
+const modalImg=document.getElementById('modalImage');
+document.querySelectorAll('.team-member img,.team-img').forEach(img=>{
+  img.addEventListener('click',()=>{
+    modal.classList.add('active');
+    modalImg.src=img.src;
+  });
+});
+document.querySelector('.close-modal').addEventListener('click',()=>modal.classList.remove('active'));
+modal.addEventListener('click',(e)=>{if(e.target===modal)modal.classList.remove('active');});
+</script>
+
+<div id="teamImageModal">
+  <span class="close-btn">&times;</span>
+  <img id="teamImagePreview" src="">
+</div>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  const modal=document.getElementById("teamImageModal");
+  const preview=document.getElementById("teamImagePreview");
+
+  document.querySelectorAll('.team-member img, .team-card img, .team-img').forEach(function(img){
+    img.addEventListener('click',function(){
+      modal.classList.add('active');
+      preview.src=this.src;
+    });
+  });
+
+  document.querySelector('#teamImageModal .close-btn').onclick=function(){
+    modal.classList.remove('active');
+  };
+
+  modal.onclick=function(e){
+    if(e.target===modal){modal.classList.remove('active');}
+  };
+});
+</script>
+
+</body>
+</html>
